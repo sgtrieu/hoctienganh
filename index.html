@@ -43,7 +43,12 @@
 
     <p id="result"></p>
 </div>
+<button onclick="goToPractice()" style="background: orange;">
+    Luyện tập nâng cao
+</button>
 
+<!-- NÚT MỚI -->
+<button onclick="goToPractice()">Luyện tập nâng cao</button>
 <script>
 const verbs = [
    {v1:"be", v2:"was/were", v3:"been", mean:"thì, là, ở"},
@@ -160,6 +165,9 @@ function check() {
         document.getElementById("result").innerText =
             "❌ Sai! Đúng là: " + current.v2 + " - " + current.v3 + " (" + current.mean + ")";
     }
+}
+function goToPractice() {
+    window.location.href = "practice.html";
 }
 </script>
 

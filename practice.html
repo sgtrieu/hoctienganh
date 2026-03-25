@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Luyện tập nâng cao</title>
+
+<style>
+body {
+    font-family: Arial;
+    text-align: center;
+    background: #e6f2ff;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+}
+
+#v1 {
+    font-size: 30px;
+    margin: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<h1>Luyện tập (không random)</h1>
+
+<div id="v1"></div>
+
+<input id="v2" placeholder="Nhập V2">
+<input id="v3" placeholder="Nhập V3"><br>
+
+<button onclick="check()">Kiểm tra</button>
+
+<p id="result"></p>
+
+<hr>
+
+<h3>Kết quả</h3>
+<p>✅ Đúng: <span id="correctCount">0</span></p>
+<p>❌ Sai: <span id="wrongCount">0</span></p>
+
+<div id="wrongList"></div>
+
+<script>
+const verbs = [
+    {v1:"go", v2:"went", v3:"gone", mean:"đi"},
+    {v1:"eat", v2:"ate", v3:"eaten", mean:"ăn"},
+    {v1:"buy", v2:"bought", v3:"bought", mean:"mua"},
+    {v1:"see", v2:"saw", v3:"seen", mean:"thấy"},
+    {v1:"take", v2:"took", v3:"taken", mean:"lấy"},
+    {v1:"write", v2:"wrote", v3:"written", mean:"viết"}
+];
+
+let index = 0;
+let correct = 0;
+let wrong = 0;
+let wrongAnswers = [];
+
+function loadWord() {
+    if (index >= verbs.length) {
+        document.getElementById("v1").innerText = "🎉 Hoàn thành!";
+        return;
+    }
+
+    document.getElementById("v1").innerText = verbs[index].v1;
+    document.getElementById("v2").value = "";
+    document.getElementById("v3").value = "";
+    document.getElementById("result").innerText = "";
+}
+
+function check() {
+    let v2 = document.getElementById("v2").value.trim().toLowerCase();
+    let v3 = document.getElementById("v3").value.trim().toLowerCase();
+
+    let verb = verbs[index];
+
+    if (v2 === verb.v2 && v3 === verb.v3) {
+        correct++;
+        document.getElementById("result").innerText = "✅ Đúng!";
+    } else {
+        wrong++;
+        document.getElementById("result").innerText =
+            "❌ Sai! " + verb.v2 + " - " + verb.v3 + " (" + verb.mean + ")";
+
+        wrongAnswers.push(
+            verb.v1 + " → " + verb.v2 + " - " + verb.v3 + " (" + verb.mean + ")"
+        );
+    }
+
+    index++;
+
+    document.getElementById("correctCount").innerText = correct;
+    document.getElementById("wrongCount").innerText = wrong;
+
+    setTimeout(loadWord, 1000);
+}
+
+function showWrongList() {
+    let list = document.getElementById("wrongList");
+    list.innerHTML = "<h4>Câu sai:</h4>";
+
+    wrongAnswers.forEach(item => {
+        list.innerHTML += "<p>" + item + "</p>";
+    });
+}
+
+loadWord();
+</script>
+
+</body>
+</html>
