@@ -25,6 +25,17 @@
             font-size: 30px;
             margin: 20px;
         }
+        .practice-btn {
+    .practice-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: orange;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    z-index: 1000;
+}
+}
     </style>
 </head>
 <body>
@@ -43,12 +54,11 @@
 
     <p id="result"></p>
 </div>
-<button onclick="goToPractice()" style="background: orange;">
+<button onclick="goToPractice()" class="practice-btn">
     Luyện tập nâng cao
 </button>
 
-<!-- NÚT MỚI -->
-<button onclick="goToPractice()">Luyện tập nâng cao</button>
+
 <script>
 const verbs = [
    {v1:"be", v2:"was/were", v3:"been", mean:"thì, là, ở"},
