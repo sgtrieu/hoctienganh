@@ -62,7 +62,7 @@ body {
 }
 
 #word {
-    font-size: 28px;
+    font-size: 30px;
     font-weight: bold;
 }
 
@@ -72,6 +72,8 @@ body {
     border-radius: 50%;
     width: 35px;
     height: 35px;
+    border: none;
+    cursor: pointer;
 }
 
 input {
@@ -80,6 +82,7 @@ input {
     border-radius: 10px;
     border: 1px solid #ccc;
     margin-top: 15px;
+    font-size: 16px;
 }
 
 button {
@@ -92,24 +95,22 @@ button {
 
 .check-btn { background: #22c55e; color: white; }
 .next-btn { background: #3b82f6; color: white; }
-.review-btn { background: #f59e0b; color: white; }
 
 #result { margin-top: 10px; font-weight: bold; }
 #example { margin-top: 10px; color: #555; }
 
 @media(max-width:768px){
     body { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; display: flex; }
+    .sidebar { width: 100%; height: auto; display: flex; justify-content: space-around; }
 }
 </style>
 </head>
 
 <body>
-
 <div class="sidebar">
     <a href="index.html">🏠 Trang chính</a>
     <a href="practice.html">📘 Luyện tập</a>
-    <a href="#" onclick="reviewWrong()">❌ Ôn lại câu sai</a>
+    <a href="vocab.html">🧠 Từ vựng</a>
 </div>
 
 <div class="content">
@@ -189,8 +190,7 @@ const words = [
 {en:"witty", vi:["dí dỏm"]},
 ];
 
-const examples = {
- "against": ["He leaned against the wall."],
+const examples = {"against": ["He leaned against the wall."],
         "around": ["We walked around the park."],
         "below": ["The temperature is below zero."],
         "between": ["She sat between her friends."],
@@ -243,14 +243,13 @@ const examples = {
 };
 
 let current;
-let wrongList = JSON.parse(localStorage.getItem("wrongWords")) || [];
 
-/* Chuẩn hóa */
+/* Chuẩn hóa input */
 function normalize(str){
     return str.toLowerCase().trim().replace(/\s+/g," ");
 }
 
-/* Random từ */
+/* Lấy từ mới */
 function nextWord(){
     current = words[Math.floor(Math.random()*words.length)];
 
@@ -260,7 +259,7 @@ function nextWord(){
     document.getElementById("example").innerText="";
 }
 
-/* Check */
+/* Kiểm tra */
 function check(){
     let ans = normalize(document.getElementById("answer").value);
 
@@ -271,9 +270,6 @@ function check(){
     } else {
         document.getElementById("result").innerText =
         "❌ Sai! " + current.en + " = " + current.vi.join(", ");
-
-        wrongList.push(current);
-        localStorage.setItem("wrongWords", JSON.stringify(wrongList));
     }
 
     generateExample();
@@ -297,19 +293,6 @@ function speak(){
     let speech = new SpeechSynthesisUtterance(current.en);
     speech.lang = "en-US";
     window.speechSynthesis.speak(speech);
-}
-
-/* Ôn lại */
-function reviewWrong(){
-    if(wrongList.length === 0){
-        alert("Không có câu sai 😎");
-        return;
-    }
-
-    current = wrongList[Math.floor(Math.random()*wrongList.length)];
-    document.getElementById("word").innerText = current.en;
-    document.getElementById("answer").value="";
-    document.getElementById("result").innerText="Đang ôn lại câu sai...";
 }
 
 /* Enter để check */
