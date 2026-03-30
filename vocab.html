@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Học từ vựng</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background: #1e293b;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.sidebar a:hover {
+    background: #334155;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    background: #f1f5f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Card */
+.card {
+    background: white;
+    padding: 25px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+#wordBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+#word {
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.speak-btn {
+    background: #3b82f6;
+    color: white;
+    border-radius: 50%;
+    width: 35px;
+    height: 35px;
+}
+
+input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    margin-top: 15px;
+}
+
+button {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.check-btn { background: #22c55e; color: white; }
+.next-btn { background: #3b82f6; color: white; }
+.review-btn { background: #f59e0b; color: white; }
+
+#result { margin-top: 10px; font-weight: bold; }
+#example { margin-top: 10px; color: #555; }
+
+@media(max-width:768px){
+    body { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; display: flex; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <a href="index.html">🏠 Trang chính</a>
+    <a href="practice.html">📘 Luyện tập</a>
+    <a href="#" onclick="reviewWrong()">❌ Ôn lại câu sai</a>
+</div>
+
+<div class="content">
+<div class="card">
+
+<h2>Học từ vựng</h2>
+
+<div id="wordBox">
+    <div id="word"></div>
+    <button class="speak-btn" onclick="speak()">🔊</button>
+</div>
+
+<input id="answer" placeholder="Nhập nghĩa tiếng Việt...">
+
+<div>
+    <button class="check-btn" onclick="check()">Kiểm tra</button>
+    <button class="next-btn" onclick="nextWord()">Từ mới</button>
+</div>
+
+<p id="result"></p>
+<p id="example"></p>
+
+</div>
+</div>
+
+<script>
+const words = [
+{en:"against", vi:["chống lại","tựa vào"]},
+{en:"around", vi:["xung quanh"]},
+{en:"below", vi:["bên dưới"]},
+{en:"between", vi:["giữa"]},
+{en:"each", vi:["mỗi"]},
+{en:"even", vi:["thậm chí"]},
+{en:"few", vi:["vài","ít"]},
+{en:"find", vi:["tìm thấy"]},
+{en:"take", vi:["lấy","mang","đưa"]},
+{en:"those", vi:["những cái kia"]},
+{en:"animal", vi:["động vật"]},
+{en:"answer", vi:["trả lời"]},
+{en:"cold", vi:["lạnh"]},
+{en:"course", vi:["khóa học","tất nhiên"]},
+{en:"different", vi:["khác nhau"]},
+{en:"earth", vi:["trái đất"]},
+{en:"example", vi:["ví dụ"]},
+{en:"grow", vi:["phát triển","trồng"]},
+{en:"hand", vi:["bàn tay"]},
+{en:"hard", vi:["khó","chăm chỉ"]},
+{en:"high", vi:["cao"]},
+{en:"large", vi:["lớn"]},
+{en:"leave", vi:["rời đi"]},
+{en:"make", vi:["làm","tạo ra"]},
+{en:"move", vi:["di chuyển"]},
+{en:"night", vi:["ban đêm"]},
+{en:"often", vi:["thường xuyên"]},
+{en:"point", vi:["điểm","chỉ ra"]},
+{en:"sentence", vi:["câu"]},
+
+{en:"ambitious", vi:["có tham vọng"]},
+{en:"confident", vi:["tự tin"]},
+{en:"generous", vi:["hào phóng"]},
+{en:"reliable", vi:["đáng tin cậy"]},
+{en:"optimistic", vi:["lạc quan"]},
+{en:"pessimistic", vi:["bi quan"]},
+{en:"sensitive", vi:["nhạy cảm"]},
+{en:"stubborn", vi:["bướng bỉnh"]},
+{en:"thoughtful", vi:["chu đáo","trầm ngâm"]},
+{en:"anxious", vi:["lo lắng"]},
+{en:"enthusiastic", vi:["nhiệt huyết"]},
+{en:"aggressive", vi:["hung hăng","quyết liệt"]},
+{en:"disciplined", vi:["có kỷ luật"]},
+{en:"curious", vi:["tò mò"]},
+{en:"hesitant", vi:["do dự"]},
+{en:"motivated", vi:["có động lực"]},
+{en:"sincere", vi:["chân thành"]},
+{en:"tolerant", vi:["vị tha","bao dung"]},
+{en:"versatile", vi:["linh hoạt","đa năng"]},
+{en:"witty", vi:["dí dỏm"]},
+];
+
+const examples = {
+ "against": ["He leaned against the wall."],
+        "around": ["We walked around the park."],
+        "below": ["The temperature is below zero."],
+        "between": ["She sat between her friends."],
+        "each": ["Each student has a book."],
+        "even": ["Even a child can do it."],
+        "few": ["I have a few friends here."],
+        "find": ["I can't find my keys."],
+        "take": ["Please take your bag."],
+        "those": ["Those are my shoes."],
+        "animal": ["The dog is a friendly animal."],
+        "answer": ["She gave the correct answer."],
+        "cold": ["It is very cold today."],
+        "course": ["I am taking an English course."],
+        "different": ["We have different ideas."],
+        "earth": ["The Earth goes around the sun."],
+        "example": ["This is a good example."],
+        "grow": ["Plants grow fast in summer."],
+        "hand": ["He raised his hand."],
+        "hard": ["This test is very hard."],
+        "high": ["The mountain is very high."],
+        "large": ["They live in a large house."],
+        "leave": ["I will leave at 7 PM."],
+        "make": ["She can make a cake."],
+        "move": ["We will move to a new house."],
+        "night": ["I study at night."],
+        "often": ["I often go to the gym."],
+        "point": ["He made an important point."],
+        "sentence": ["Write a simple sentence."],
+        
+        "ambitious": ["She is ambitious and wants to succeed."],
+"confident": ["He is confident in his skills."],
+"generous": ["She is generous with her money."],
+"reliable": ["He is reliable and always on time."],
+"optimistic": ["She is optimistic about life."],
+"pessimistic": ["He is pessimistic about the future."],
+"sensitive": ["She is sensitive to noise."],
+"stubborn": ["He is stubborn and never listens."],
+"thoughtful": ["She is thoughtful and kind."],
+"anxious": ["He feels anxious before exams."],
+"enthusiastic": ["She is enthusiastic about learning."],
+"aggressive": ["He is aggressive in games."],
+"disciplined": ["She is disciplined in her study."],
+"curious": ["Children are curious by nature."],
+"hesitant": ["He is hesitant to speak."],
+"motivated": ["She is motivated to improve."],
+"sincere": ["He is sincere in his apology."],
+"tolerant": ["She is tolerant of others."],
+"versatile": ["He is versatile in many fields."],
+"witty": ["She is witty and funny."],
+};
+
+let current;
+let wrongList = JSON.parse(localStorage.getItem("wrongWords")) || [];
+
+/* Chuẩn hóa */
+function normalize(str){
+    return str.toLowerCase().trim().replace(/\s+/g," ");
+}
+
+/* Random từ */
+function nextWord(){
+    current = words[Math.floor(Math.random()*words.length)];
+
+    document.getElementById("word").innerText = current.en;
+    document.getElementById("answer").value="";
+    document.getElementById("result").innerText="";
+    document.getElementById("example").innerText="";
+}
+
+/* Check */
+function check(){
+    let ans = normalize(document.getElementById("answer").value);
+
+    let correct = current.vi.some(v => normalize(v) === ans);
+
+    if(correct){
+        document.getElementById("result").innerText="✅ Đúng!";
+    } else {
+        document.getElementById("result").innerText =
+        "❌ Sai! " + current.en + " = " + current.vi.join(", ");
+
+        wrongList.push(current);
+        localStorage.setItem("wrongWords", JSON.stringify(wrongList));
+    }
+
+    generateExample();
+}
+
+/* Ví dụ */
+function generateExample(){
+    let word = current.en;
+
+    if(examples[word]){
+        let ex = examples[word][Math.floor(Math.random()*examples[word].length)];
+        document.getElementById("example").innerText = "📌 Ví dụ: " + ex;
+    } else {
+        document.getElementById("example").innerText =
+        "📌 Ví dụ: This is a sentence with '" + word + "'.";
+    }
+}
+
+/* Phát âm */
+function speak(){
+    let speech = new SpeechSynthesisUtterance(current.en);
+    speech.lang = "en-US";
+    window.speechSynthesis.speak(speech);
+}
+
+/* Ôn lại */
+function reviewWrong(){
+    if(wrongList.length === 0){
+        alert("Không có câu sai 😎");
+        return;
+    }
+
+    current = wrongList[Math.floor(Math.random()*wrongList.length)];
+    document.getElementById("word").innerText = current.en;
+    document.getElementById("answer").value="";
+    document.getElementById("result").innerText="Đang ôn lại câu sai...";
+}
+
+/* Enter để check */
+document.getElementById("answer").addEventListener("keypress",function(e){
+    if(e.key==="Enter"){
+        check();
+    }
+});
+
+nextWord();
+</script>
+
+</body>
+</html>

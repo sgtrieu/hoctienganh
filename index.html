@@ -1,44 +1,74 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Học động từ bất quy tắc</title>
-    <style>
-        body {
-            font-family: Arial;
-            text-align: center;
-            background: #e6f2ff;
-        }
-        button {
-            padding: 10px 20px;
-            margin: 10px;
-            background: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        input {
-            padding: 8px;
-            margin: 5px;
-        }
-        #v1 {
-            font-size: 30px;
-            margin: 20px;
-        }
-        .practice-btn {
-    .practice-btn {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: orange;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    z-index: 1000;
+<meta charset="UTF-8">
+<title>Học động từ</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial;
+    display: flex;
 }
+
+/* SIDEBAR */
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background: #333;
+    color: white;
+    padding-top: 20px;
 }
-    </style>
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.sidebar a:hover {
+    background: #575757;
+}
+
+/* CONTENT */
+.content {
+    flex: 1;
+    padding: 20px;
+    text-align: center;
+    background: #e6f2ff;
+}
+
+button {
+    padding: 10px 20px;
+    margin: 10px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+}
+
+input {
+    padding: 8px;
+    margin: 5px;
+}
+
+#v1 {
+    font-size: 30px;
+}
+</style>
 </head>
+
 <body>
+
+<!-- MENU TRÁI -->
+<div class="sidebar">
+    <a href="index.html">🏠 Trang chính</a>
+    <a href="practice.html">📘 Luyện tập</a>
+    <a href="vocab.html">🧠 Từ vựng</a>
+</div>
+
+<!-- NỘI DUNG -->
+<div class="content">
 
 <h1>Học động từ bất quy tắc</h1>
 
@@ -51,17 +81,14 @@
     <input id="v3" placeholder="Nhập V3"><br>
 
     <button onclick="check()">Kiểm tra</button>
-
     <p id="result"></p>
 </div>
-<button onclick="goToPractice()" class="practice-btn">
-    Luyện tập nâng cao
-</button>
 
+</div>
 
 <script>
 const verbs = [
-   {v1:"be", v2:"was/were", v3:"been", mean:"thì, là, ở"},
+ {v1:"be", v2:"was/were", v3:"been", mean:"thì, là, ở"},
 {v1:"become", v2:"became", v3:"become", mean:"trở thành"},
 {v1:"begin", v2:"began", v3:"begun", mean:"bắt đầu"},
 {v1:"blow", v2:"blew", v3:"blown", mean:"thổi"},
@@ -156,28 +183,20 @@ let current;
 
 function startGame() {
     document.getElementById("game").style.display = "block";
-    document.getElementById("result").innerText = "";
-
     current = verbs[Math.floor(Math.random() * verbs.length)];
-
     document.getElementById("v1").innerText = current.v1;
-    document.getElementById("v2").value = "";
-    document.getElementById("v3").value = "";
 }
 
 function check() {
-    let v2 = document.getElementById("v2").value.trim().toLowerCase();
-    let v3 = document.getElementById("v3").value.trim().toLowerCase();
+    let v2 = document.getElementById("v2").value.toLowerCase();
+    let v3 = document.getElementById("v3").value.toLowerCase();
 
     if (v2 === current.v2 && v3 === current.v3) {
         document.getElementById("result").innerText = "✅ Đúng!";
     } else {
         document.getElementById("result").innerText =
-            "❌ Sai! Đúng là: " + current.v2 + " - " + current.v3 + " (" + current.mean + ")";
+        "❌ " + current.v2 + " - " + current.v3 + " (" + current.mean + ")";
     }
-}
-function goToPractice() {
-    window.location.href = "practice.html";
 }
 </script>
 
