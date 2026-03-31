@@ -2,16 +2,17 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Học động từ</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Học động từ bất quy tắc</title>
 
 <style>
 body {
     margin: 0;
-    font-family: Arial;
+    font-family: "Segoe UI", sans-serif;
     display: flex;
 }
 
-/* Sidebar */
+/* SIDEBAR */
 .sidebar {
     width: 220px;
     background: #1e293b;
@@ -33,175 +34,265 @@ body {
     background: #334155;
 }
 
-
 /* CONTENT */
 .content {
     flex: 1;
-    padding: 20px;
+    background: #f1f5f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 520px;
     text-align: center;
-    background: #e6f2ff;
-}
-
-button {
-    padding: 10px 20px;
-    margin: 10px;
-    background: #4CAF50;
-    color: white;
-    border: none;
-}
-
-input {
-    padding: 8px;
-    margin: 5px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
 #v1 {
-    font-size: 30px;
+    font-size: 34px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* INPUT */
+input {
+    width: 42%;
+    padding: 12px;
+    margin: 6px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+}
+
+/* BUTTON */
+button {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.start-btn { background: #6366f1; color: white; }
+.check-btn { background: #22c55e; color: white; }
+.next-btn { background: #3b82f6; color: white; }
+
+/* RESULT */
+#result {
+    margin-top: 12px;
+    font-weight: bold;
+}
+
+/* REVIEW BUTTON */
+.review-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #f59e0b;
+    color: white;
+}
+
+/* MOBILE */
+@media(max-width:768px){
+    body { flex-direction: column; }
+    .sidebar { width: 100%; height: auto; display: flex; }
+    input { width: 90%; }
 }
 </style>
 </head>
 
 <body>
 
-<!-- MENU TRÁI -->
-<div class="sidebar">   
-   <a href="index.html">🏠 Trang chính</a>
+<div class="sidebar">
+     <a href="index.html">🏠 Trang chính</a>
     <a href="practice.html">📘 Luyện tập</a>
     <a href="vocab.html">🧠 Từ vựng Zy cần ôn</a>
     <a href="hoctuvung.html">🔄 Ôn tập</a>
 </div>
 
-<!-- NỘI DUNG -->
+<button class="review-btn" onclick="reviewWrong()">🔄 Học lại từ sai</button>
+
 <div class="content">
+<div class="card">
 
-<h1>Học động từ bất quy tắc</h1>
+<h2>Học động từ bất quy tắc</h2>
 
-<button onclick="startGame()">Bắt đầu</button>
+<button class="start-btn" onclick="startGame()">Bắt đầu</button>
 
 <div id="game" style="display:none;">
-    <div id="v1"></div>
+<div id="v1"></div>
 
-    <input id="v2" placeholder="Nhập V2">
-    <input id="v3" placeholder="Nhập V3"><br>
+<input id="v2" placeholder="Nhập V2">
+<input id="v3" placeholder="Nhập V3"><br>
 
-    <button onclick="check()">Kiểm tra</button>
-    <p id="result"></p>
+<button class="check-btn" onclick="check()">Kiểm tra</button>
+<button class="next-btn" onclick="nextWord()">Từ mới</button>
+
+<p id="result"></p>
 </div>
 
+</div>
 </div>
 
 <script>
 const verbs = [
- {v1:"be", v2:"was/were", v3:"been", mean:"thì, là, ở"},
-{v1:"become", v2:"became", v3:"become", mean:"trở thành"},
-{v1:"begin", v2:"began", v3:"begun", mean:"bắt đầu"},
-{v1:"blow", v2:"blew", v3:"blown", mean:"thổi"},
-{v1:"break", v2:"broke", v3:"broken", mean:"làm vỡ"},
-{v1:"bring", v2:"brought", v3:"brought", mean:"mang đến"},
-{v1:"build", v2:"built", v3:"built", mean:"xây dựng"},
-{v1:"burn", v2:"burned/burnt", v3:"burned/burnt", mean:"đốt cháy"},
-{v1:"buy", v2:"bought", v3:"bought", mean:"mua"},
+{v1:"be", v2:["was","were"], v3:["been"], mean:"thì, là, ở"},
+{v1:"become", v2:["became"], v3:["become"], mean:"trở thành"},
+{v1:"begin", v2:["began"], v3:["begun"], mean:"bắt đầu"},
+{v1:"blow", v2:["blew"], v3:["blown"], mean:"thổi"},
+{v1:"break", v2:["broke"], v3:["broken"], mean:"làm vỡ"},
+{v1:"bring", v2:["brought"], v3:["brought"], mean:"mang đến"},
+{v1:"build", v2:["built"], v3:["built"], mean:"xây dựng"},
+{v1:"burn", v2:["burned","burnt"], v3:["burned","burnt"], mean:"đốt cháy"},
+{v1:"buy", v2:["bought"], v3:["bought"], mean:"mua"},
 
-{v1:"can", v2:"could", v3:"been able to", mean:"có thể"},
-{v1:"catch", v2:"caught", v3:"caught", mean:"bắt"},
-{v1:"choose", v2:"chose", v3:"chosen", mean:"chọn"},
-{v1:"come", v2:"came", v3:"come", mean:"đến"},
-{v1:"cost", v2:"cost", v3:"cost", mean:"có giá"},
-{v1:"cut", v2:"cut", v3:"cut", mean:"cắt"},
+{v1:"can", v2:["could"], v3:["been able to"], mean:"có thể"},
+{v1:"catch", v2:["caught"], v3:["caught"], mean:"bắt"},
+{v1:"choose", v2:["chose"], v3:["chosen"], mean:"chọn"},
+{v1:"come", v2:["came"], v3:["come"], mean:"đến"},
+{v1:"cost", v2:["cost"], v3:["cost"], mean:"có giá"},
+{v1:"cut", v2:["cut"], v3:["cut"], mean:"cắt"},
 
-{v1:"do", v2:"did", v3:"done", mean:"làm"},
-{v1:"draw", v2:"drew", v3:"drawn", mean:"vẽ"},
-{v1:"drink", v2:"drank", v3:"drunk", mean:"uống"},
-{v1:"drive", v2:"drove", v3:"driven", mean:"lái xe"},
+{v1:"do", v2:["did"], v3:["done"], mean:"làm"},
+{v1:"draw", v2:["drew"], v3:["drawn"], mean:"vẽ"},
+{v1:"drink", v2:["drank"], v3:["drunk"], mean:"uống"},
+{v1:"drive", v2:["drove"], v3:["driven"], mean:"lái xe"},
 
-{v1:"eat", v2:"ate", v3:"eaten", mean:"ăn"},
-{v1:"fall", v2:"fell", v3:"fallen", mean:"rơi"},
-{v1:"feel", v2:"felt", v3:"felt", mean:"cảm thấy"},
-{v1:"fight", v2:"fought", v3:"fought", mean:"chiến đấu"},
-{v1:"find", v2:"found", v3:"found", mean:"tìm thấy"},
-{v1:"fly", v2:"flew", v3:"flown", mean:"bay"},
-{v1:"forget", v2:"forgot", v3:"forgotten", mean:"quên"},
+{v1:"eat", v2:["ate"], v3:["eaten"], mean:"ăn"},
+{v1:"fall", v2:["fell"], v3:["fallen"], mean:"rơi"},
+{v1:"feel", v2:["felt"], v3:["felt"], mean:"cảm thấy"},
+{v1:"fight", v2:["fought"], v3:["fought"], mean:"chiến đấu"},
+{v1:"find", v2:["found"], v3:["found"], mean:"tìm thấy"},
+{v1:"fly", v2:["flew"], v3:["flown"], mean:"bay"},
+{v1:"forget", v2:["forgot"], v3:["forgotten"], mean:"quên"},
 
-{v1:"get", v2:"got", v3:"got", mean:"có/nhận"},
-{v1:"give", v2:"gave", v3:"given", mean:"cho"},
-{v1:"go", v2:"went", v3:"gone", mean:"đi"},
-{v1:"grow", v2:"grew", v3:"grown", mean:"phát triển"},
-{v1:"have", v2:"had", v3:"had", mean:"có"},
-{v1:"hear", v2:"heard", v3:"heard", mean:"nghe"},
-{v1:"hide", v2:"hid", v3:"hidden", mean:"trốn"},
-{v1:"hit", v2:"hit", v3:"hit", mean:"đánh"},
+{v1:"get", v2:["got"], v3:["got","gotten"], mean:"có/nhận"},
+{v1:"give", v2:["gave"], v3:["given"], mean:"cho"},
+{v1:"go", v2:["went"], v3:["gone"], mean:"đi"},
+{v1:"grow", v2:["grew"], v3:["grown"], mean:"phát triển"},
+{v1:"have", v2:["had"], v3:["had"], mean:"có"},
+{v1:"hear", v2:["heard"], v3:["heard"], mean:"nghe"},
+{v1:"hide", v2:["hid"], v3:["hidden"], mean:"trốn"},
+{v1:"hit", v2:["hit"], v3:["hit"], mean:"đánh"},
 
-{v1:"keep", v2:"kept", v3:"kept", mean:"giữ"},
-{v1:"know", v2:"knew", v3:"known", mean:"biết"},
-{v1:"lay", v2:"laid", v3:"laid", mean:"đặt, để"},
-{v1:"lead", v2:"led", v3:"led", mean:"dẫn dắt"},
-{v1:"learn", v2:"learned/learnt", v3:"learned/learnt", mean:"học"},
+{v1:"keep", v2:["kept"], v3:["kept"], mean:"giữ"},
+{v1:"know", v2:["knew"], v3:["known"], mean:"biết"},
+{v1:"lay", v2:["laid"], v3:["laid"], mean:"đặt, để"},
+{v1:"lead", v2:["led"], v3:["led"], mean:"dẫn dắt"},
+{v1:"learn", v2:["learned","learnt"], v3:["learned","learnt"], mean:"học"},
 
-{v1:"leave", v2:"left", v3:"left", mean:"rời đi"},
-{v1:"lend", v2:"lent", v3:"lent", mean:"cho mượn"},
-{v1:"lose", v2:"lost", v3:"lost", mean:"mất"},
-{v1:"make", v2:"made", v3:"made", mean:"làm"},
-{v1:"mean", v2:"meant", v3:"meant", mean:"có nghĩa"},
-{v1:"meet", v2:"met", v3:"met", mean:"gặp"},
+{v1:"leave", v2:["left"], v3:["left"], mean:"rời đi"},
+{v1:"lend", v2:["lent"], v3:["lent"], mean:"cho mượn"},
+{v1:"lose", v2:["lost"], v3:["lost"], mean:"mất"},
+{v1:"make", v2:["made"], v3:["made"], mean:"làm"},
+{v1:"mean", v2:["meant"], v3:["meant"], mean:"có nghĩa"},
+{v1:"meet", v2:["met"], v3:["met"], mean:"gặp"},
 
-{v1:"pay", v2:"paid", v3:"paid", mean:"trả tiền"},
-{v1:"put", v2:"put", v3:"put", mean:"đặt"},
-{v1:"read", v2:"read", v3:"read", mean:"đọc"},
-{v1:"ride", v2:"rode", v3:"ridden", mean:"cưỡi"},
-{v1:"ring", v2:"rang", v3:"rung", mean:"reo"},
-{v1:"run", v2:"ran", v3:"run", mean:"chạy"},
+{v1:"pay", v2:["paid"], v3:["paid"], mean:"trả tiền"},
+{v1:"put", v2:["put"], v3:["put"], mean:"đặt"},
+{v1:"read", v2:["read"], v3:["read"], mean:"đọc"},
+{v1:"ride", v2:["rode"], v3:["ridden"], mean:"cưỡi"},
+{v1:"ring", v2:["rang"], v3:["rung"], mean:"reo"},
+{v1:"run", v2:["ran"], v3:["run"], mean:"chạy"},
 
-{v1:"say", v2:"said", v3:"said", mean:"nói"},
-{v1:"see", v2:"saw", v3:"seen", mean:"thấy"},
-{v1:"sell", v2:"sold", v3:"sold", mean:"bán"},
-{v1:"send", v2:"sent", v3:"sent", mean:"gửi"},
-{v1:"shake", v2:"shook", v3:"shaken", mean:"lắc"},
-{v1:"show", v2:"showed", v3:"shown/showed", mean:"chỉ, cho xem"},
-{v1:"shut", v2:"shut", v3:"shut", mean:"đóng"},
-{v1:"sing", v2:"sang", v3:"sung", mean:"hát"},
-{v1:"sit", v2:"sat", v3:"sat", mean:"ngồi"},
-{v1:"sleep", v2:"slept", v3:"slept", mean:"ngủ"},
-{v1:"smell", v2:"smelled/smelt", v3:"smelled/smelt", mean:"ngửi"},
-{v1:"speak", v2:"spoke", v3:"spoken", mean:"nói"},
+{v1:"say", v2:["said"], v3:["said"], mean:"nói"},
+{v1:"see", v2:["saw"], v3:["seen"], mean:"thấy"},
+{v1:"sell", v2:["sold"], v3:["sold"], mean:"bán"},
+{v1:"send", v2:["sent"], v3:["sent"], mean:"gửi"},
+{v1:"shake", v2:["shook"], v3:["shaken"], mean:"lắc"},
+{v1:"show", v2:["showed"], v3:["shown","showed"], mean:"chỉ, cho xem"},
+{v1:"shut", v2:["shut"], v3:["shut"], mean:"đóng"},
+{v1:"sing", v2:["sang"], v3:["sung"], mean:"hát"},
+{v1:"sit", v2:["sat"], v3:["sat"], mean:"ngồi"},
+{v1:"sleep", v2:["slept"], v3:["slept"], mean:"ngủ"},
+{v1:"smell", v2:["smelled","smelt"], v3:["smelled","smelt"], mean:"ngửi"},
+{v1:"speak", v2:["spoke"], v3:["spoken"], mean:"nói"},
 
-{v1:"spell", v2:"spelled/spelt", v3:"spelled/spelt", mean:"đánh vần"},
-{v1:"spend", v2:"spent", v3:"spent", mean:"tiêu"},
-{v1:"stand", v2:"stood", v3:"stood", mean:"đứng"},
-{v1:"steal", v2:"stole", v3:"stolen", mean:"ăn trộm"},
-{v1:"swim", v2:"swam", v3:"swum", mean:"bơi"},
+{v1:"spell", v2:["spelled","spelt"], v3:["spelled","spelt"], mean:"đánh vần"},
+{v1:"spend", v2:["spent"], v3:["spent"], mean:"tiêu"},
+{v1:"stand", v2:["stood"], v3:["stood"], mean:"đứng"},
+{v1:"steal", v2:["stole"], v3:["stolen"], mean:"ăn trộm"},
+{v1:"swim", v2:["swam"], v3:["swum"], mean:"bơi"},
 
-{v1:"take", v2:"took", v3:"taken", mean:"lấy"},
-{v1:"teach", v2:"taught", v3:"taught", mean:"dạy"},
-{v1:"tell", v2:"told", v3:"told", mean:"kể"},
-{v1:"think", v2:"thought", v3:"thought", mean:"nghĩ"},
-{v1:"throw", v2:"threw", v3:"thrown", mean:"ném"},
-{v1:"understand", v2:"understood", v3:"understood", mean:"hiểu"},
+{v1:"take", v2:["took"], v3:["taken"], mean:"lấy"},
+{v1:"teach", v2:["taught"], v3:["taught"], mean:"dạy"},
+{v1:"tell", v2:["told"], v3:["told"], mean:"kể"},
+{v1:"think", v2:["thought"], v3:["thought"], mean:"nghĩ"},
+{v1:"throw", v2:["threw"], v3:["thrown"], mean:"ném"},
+{v1:"understand", v2:["understood"], v3:["understood"], mean:"hiểu"},
 
-{v1:"wake", v2:"woke", v3:"woken", mean:"thức dậy"},
-{v1:"wear", v2:"wore", v3:"worn", mean:"mặc"},
-{v1:"win", v2:"won", v3:"won", mean:"thắng"},
-{v1:"write", v2:"wrote", v3:"written", mean:"viết"},
+{v1:"wake", v2:["woke"], v3:["woken"], mean:"thức dậy"},
+{v1:"wear", v2:["wore"], v3:["worn"], mean:"mặc"},
+{v1:"win", v2:["won"], v3:["won"], mean:"thắng"},
+{v1:"write", v2:["wrote"], v3:["written"], mean:"viết"}
 ];
 
 let current;
+let wrongList = JSON.parse(localStorage.getItem("wrongVerbs")) || [];
 
-function startGame() {
-    document.getElementById("game").style.display = "block";
-    current = verbs[Math.floor(Math.random() * verbs.length)];
-    document.getElementById("v1").innerText = current.v1;
+function normalize(str){
+    return str.toLowerCase().trim().replace(/\s+/g," ");
 }
 
-function check() {
-    let v2 = document.getElementById("v2").value.toLowerCase();
-    let v3 = document.getElementById("v3").value.toLowerCase();
+function startGame(){
+    document.getElementById("game").style.display = "block";
+    nextWord();
+}
 
-    if (v2 === current.v2 && v3 === current.v3) {
+function nextWord(){
+    current = verbs[Math.floor(Math.random()*verbs.length)];
+
+    document.getElementById("v1").innerText = current.v1;
+    document.getElementById("v2").value = "";
+    document.getElementById("v3").value = "";
+    document.getElementById("result").innerText = "";
+}
+
+function check(){
+    let v2 = normalize(document.getElementById("v2").value);
+    let v3 = normalize(document.getElementById("v3").value);
+
+    let correct =
+        current.v2.includes(v2) &&
+        current.v3.includes(v3);
+
+    if(correct){
         document.getElementById("result").innerText = "✅ Đúng!";
     } else {
         document.getElementById("result").innerText =
-        "❌ " + current.v2 + " - " + current.v3 + " (" + current.mean + ")";
+        "❌ Sai! " + current.v2.join("/") + " - " + current.v3.join("/") + " (" + current.mean + ")";
+
+        wrongList.push(current);
+        localStorage.setItem("wrongVerbs", JSON.stringify(wrongList));
     }
 }
+
+function reviewWrong(){
+    if(wrongList.length === 0){
+        alert("Không có từ sai 😎");
+        return;
+    }
+
+    current = wrongList[Math.floor(Math.random()*wrongList.length)];
+
+    document.getElementById("game").style.display = "block";
+    document.getElementById("v1").innerText = current.v1;
+    document.getElementById("v2").value = "";
+    document.getElementById("v3").value = "";
+    document.getElementById("result").innerText = "🔄 Đang ôn lại";
+}
+
+/* ENTER */
+document.getElementById("v3").addEventListener("keypress",function(e){
+    if(e.key==="Enter"){
+        check();
+    }
+});
 </script>
 
 </body>
