@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Học từ vựng</title>
+<title>Học từ vựng tiếng Trung</title>
 
 <style>
 body {
@@ -37,103 +37,89 @@ body {
 /* Content */
 .content {
     flex: 1;
+    padding: 20px;
     background: #f1f5f9;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+}
+
+/* Top button */
+.top-btn {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    background: #6366f1;
+    color: white;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
 }
 
 /* Card */
 .card {
     background: white;
-    padding: 25px;
+    padding: 20px;
     border-radius: 15px;
-    width: 100%;
-    max-width: 500px;
-    text-align: center;
+    max-width: 800px;
+    margin: auto;
     box-shadow: 0 5px 20px rgba(0,0,0,0.1);
 }
 
-#wordBox {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
+.item {
+    margin-bottom: 15px;
 }
 
-#word {
-    font-size: 30px;
+.item span {
     font-weight: bold;
 }
 
-.speak-btn {
-    background: #3b82f6;
-    color: white;
-    border-radius: 50%;
-    width: 35px;
-    height: 35px;
-    border: none;
-    cursor: pointer;
-}
-
-input {
+.item input {
     width: 100%;
-    padding: 12px;
-    border-radius: 10px;
+    padding: 10px;
+    border-radius: 8px;
     border: 1px solid #ccc;
-    margin-top: 15px;
-    font-size: 16px;
+    margin-top: 5px;
 }
 
-button {
-    padding: 10px 18px;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    margin: 5px;
+.result {
+    font-size: 13px;
+    margin-top: 3px;
 }
 
-.check-btn { background: #22c55e; color: white; }
-.next-btn { background: #3b82f6; color: white; }
+.correct {
+    color: green;
+}
 
-#result { margin-top: 10px; font-weight: bold; }
-#example { margin-top: 10px; color: #555; }
+.wrong {
+    color: red;
+}
 
+/* Mobile */
 @media(max-width:768px){
     body { flex-direction: column; }
-    .sidebar { width: 100%; height: auto; display: flex; justify-content: space-around; }
+    .sidebar { width: 100%; height: auto; display: flex; overflow-x:auto; }
+    .sidebar a { flex:1; text-align:center; }
 }
 </style>
 </head>
 
 <body>
+
 <div class="sidebar">
-    <a href="index.html">🏠 Trang chính</a>
+     <a href="index.html">🏠 Trang chính</a>
     <a href="practice.html">📘 Luyện tập</a>
-    <a href="vocab.html">🧠 Từ vựng Zy cần ôn</a>
+    <a href="vocab.html">🧠  *** Từ vựng tiếng trung Zy cần ôn</a>
     <a href="hoctuvung.html">🔄 Ôn tập</a>
         <a href="ontap.html">📋 Ôn tập list</a>
 </div>
 
+<div class="top-btn" onclick="toggleMode()">🔄 Đảo chiều</div>
+
 <div class="content">
 <div class="card">
 
-<h2>Học từ vựng</h2>
+<h2>🇨🇳 Ôn tập tiếng Trung của ZY </h2>
 
-<div id="wordBox">
-    <div id="word"></div>
-    <button class="speak-btn" onclick="speak()">🔊</button>
-</div>
 
-<input id="answer" placeholder="Nhập nghĩa tiếng Việt...">
-
-<div>
-    <button class="check-btn" onclick="check()">Kiểm tra</button>
-    <button class="next-btn" onclick="nextWord()">Từ mới</button>
-</div>
-
-<p id="result"></p>
-<p id="example"></p>
+<div id="list"></div>
 
 </div>
 </div>
@@ -141,113 +127,215 @@ button {
 <script>
 const words = [
 
-{en:"ambitious", vi:["có tham vọng"]},
-{en:"confident", vi:["tự tin"]},
-{en:"generous", vi:["hào phóng"]},
-{en:"reliable", vi:["đáng tin cậy"]},
-{en:"optimistic", vi:["lạc quan"]},
-{en:"pessimistic", vi:["bi quan"]},
-{en:"sensitive", vi:["nhạy cảm"]},
-{en:"stubborn", vi:["bướng bỉnh"]},
-{en:"thoughtful", vi:["chu đáo","trầm ngâm"]},
-{en:"anxious", vi:["lo lắng"]},
-{en:"enthusiastic", vi:["nhiệt huyết"]},
-{en:"aggressive", vi:["hung hăng","quyết liệt"]},
-{en:"disciplined", vi:["có kỷ luật"]},
-{en:"curious", vi:["tò mò"]},
-{en:"hesitant", vi:["do dự"]},
-{en:"motivated", vi:["có động lực"]},
-{en:"sincere", vi:["chân thành"]},
-{en:"tolerant", vi:["vị tha","bao dung"]},
-{en:"versatile", vi:["linh hoạt","đa năng"]},
-{en:"witty", vi:["dí dỏm"]},
+
+{zh:"就", vi:"liền"},
+{zh:"要", vi:"muốn"},
+{zh:"知道", vi:"biết"},
+{zh:"吧", vi:"nhé"},
+{zh:"到", vi:"đến"},
+{zh:"对", vi:"đúng"},
+{zh:"也", vi:"cũng"},
+{zh:"还", vi:"còn"},
+{zh:"让", vi:"cho phép"},
+{zh:"给", vi:"cho"},
+{zh:"过", vi:"đã từng"},
+{zh:"得", vi:"được"},
+{zh:"真", vi:"thật"},
+{zh:"着", vi:"đang"},
+{zh:"可以", vi:"có thể"},
+{zh:"别", vi:"đừng"},
+{zh:"走", vi:"đi"},
+{zh:"告诉", vi:"nói cho"},
+{zh:"因为", vi:"bởi vì"},
+{zh:"再", vi:"lại"},
+{zh:"快", vi:"nhanh"},
+{zh:"但是", vi:"nhưng"},
+{zh:"已经", vi:"đã"},
+{zh:"为什么", vi:"tại sao"},
+{zh:"觉得", vi:"cảm thấy"},
+{zh:"它", vi:"nó"},
+{zh:"从", vi:"từ"},
+{zh:"找", vi:"tìm"},
+{zh:"最", vi:"nhất"},
+{zh:"可能", vi:"có thể"},
+{zh:"次", vi:"lần"},
+{zh:"出", vi:"ra"},
+{zh:"孩子", vi:"trẻ em"},
+{zh:"所以", vi:"vì vậy"},
+{zh:"两", vi:"hai"},
+{zh:"错", vi:"sai"},
+{zh:"等", vi:"đợi"},
+{zh:"问题", vi:"vấn đề"},
+{zh:"一起", vi:"cùng nhau"},
+{zh:"开始", vi:"bắt đầu"},
+{zh:"时间", vi:"thời gian"},
+{zh:"事情", vi:"sự việc"},
+{zh:"一下", vi:"một chút"},
+{zh:"非常", vi:"rất"},
+{zh:"希望", vi:"hy vọng"},
+{zh:"准备", vi:"chuẩn bị"},
+{zh:"比", vi:"so với"},
+{zh:"问", vi:"hỏi"},
+{zh:"件", vi:"việc"},
+{zh:"意思", vi:"ý nghĩa"},
+{zh:"第一", vi:"thứ nhất"},
+{zh:"进", vi:"vào"},
+{zh:"大家", vi:"mọi người"},
+{zh:"新", vi:"mới"},
+{zh:"您", vi:"ngài"},
+{zh:"穿", vi:"mặc"},
+{zh:"送", vi:"tặng"},
+{zh:"玩", vi:"chơi"},
+{zh:"长", vi:"dài"},
+{zh:"小时", vi:"giờ"},
+{zh:"完", vi:"xong"},
+{zh:"每", vi:"mỗi"},
+{zh:"公司", vi:"công ty"},
+{zh:"帮助", vi:"giúp đỡ"},
+{zh:"晚上", vi:"buổi tối"},
+{zh:"说话", vi:"nói chuyện"},
+{zh:"门", vi:"cửa"},
+{zh:"女", vi:"nữ"},
+{zh:"忙", vi:"bận"},
+{zh:"卖", vi:"bán"},
+{zh:"高", vi:"cao"},
+{zh:"房间", vi:"phòng"},
+{zh:"路", vi:"đường"},
+{zh:"懂", vi:"hiểu"},
+{zh:"正在", vi:"đang"},
+{zh:"笑", vi:"cười"},
+{zh:"远", vi:"xa"},
+{zh:"妻子", vi:"vợ"},
+{zh:"丈夫", vi:"chồng"},
+{zh:"离", vi:"cách"},
+{zh:"往", vi:"đến"},
+{zh:"男", vi:"nam"},
+{zh:"眼睛", vi:"mắt"},
+{zh:"快乐", vi:"vui"},
+{zh:"虽然", vi:"mặc dù"},
+{zh:"早上", vi:"buổi sáng"},
+{zh:"药", vi:"thuốc"},
+{zh:"身体", vi:"cơ thể"},
+{zh:"黑", vi:"đen"},
+{zh:"咖啡", vi:"cà phê"},
+{zh:"日", vi:"ngày"},
+{zh:"休息", vi:"nghỉ"},
+{zh:"外", vi:"ngoài"},
+{zh:"生日", vi:"sinh nhật"},
+{zh:"哥哥", vi:"anh trai"},
+{zh:"票", vi:"vé"},
+{zh:"手机", vi:"điện thoại"},
+{zh:"洗", vi:"rửa"},
+{zh:"跳舞", vi:"nhảy múa"},
+{zh:"弟弟", vi:"em trai"},
+{zh:"妹妹", vi:"em gái"},
+{zh:"红", vi:"đỏ"},
+{zh:"慢", vi:"chậm"},
+{zh:"近", vi:"gần"},
+{zh:"白", vi:"trắng"},
+{zh:"姐姐", vi:"chị gái"},
+{zh:"介绍", vi:"giới thiệu"},
+{zh:"鱼", vi:"cá"},
+{zh:"累", vi:"mệt"},
+{zh:"课", vi:"bài học"},
+{zh:"上班", vi:"đi làm"},
+{zh:"旁边", vi:"bên cạnh"},
+{zh:"运动", vi:"thể thao"},
+{zh:"去年", vi:"năm ngoái"},
+{zh:"报纸", vi:"báo"},
+{zh:"颜色", vi:"màu sắc"},
+{zh:"机场", vi:"sân bay"},
+{zh:"唱歌", vi:"hát"},
+{zh:"千", vi:"ngàn"},
+{zh:"好吃", vi:"ngon"},
+{zh:"考试", vi:"thi"},
+{zh:"左边", vi:"bên trái"},
+{zh:"姓", vi:"họ"},
+{zh:"百", vi:"trăm"},
+{zh:"雪", vi:"tuyết"},
+{zh:"贵", vi:"đắt"},
+{zh:"生病", vi:"bị bệnh"},
+{zh:"游泳", vi:"bơi"},
+{zh:"牛奶", vi:"sữa"},
+{zh:"右边", vi:"bên phải"},
+{zh:"便宜", vi:"rẻ"},
+{zh:"起床", vi:"thức dậy"},
+{zh:"鸡蛋", vi:"trứng"},
+{zh:"题", vi:"câu hỏi"},
+{zh:"零", vi:"số không"},
+{zh:"手表", vi:"đồng hồ"},
+{zh:"旅游", vi:"du lịch"},
+{zh:"服务员", vi:"nhân viên"},
+{zh:"宾馆", vi:"khách sạn"},
+{zh:"教室", vi:"lớp học"},
+{zh:"跑步", vi:"chạy bộ"},
+{zh:"阴", vi:"âm u"},
+{zh:"面条", vi:"mì"},
+{zh:"铅笔", vi:"bút chì"},
+{zh:"火车站", vi:"ga tàu"},
+{zh:"西瓜", vi:"dưa hấu"},
+{zh:"羊肉", vi:"thịt cừu"},
+{zh:"晴", vi:"trời nắng"},
+{zh:"公共汽车", vi:"xe buýt"},
+{zh:"打篮球", vi:"chơi bóng rổ"},
+{zh:"踢足球", vi:"đá bóng"}
 ];
 
-const examples = {
-        
-        "ambitious": ["She is ambitious and wants to succeed."],
-"confident": ["He is confident in his skills."],
-"generous": ["She is generous with her money."],
-"reliable": ["He is reliable and always on time."],
-"optimistic": ["She is optimistic about life."],
-"pessimistic": ["He is pessimistic about the future."],
-"sensitive": ["She is sensitive to noise."],
-"stubborn": ["He is stubborn and never listens."],
-"thoughtful": ["She is thoughtful and kind."],
-"anxious": ["He feels anxious before exams."],
-"enthusiastic": ["She is enthusiastic about learning."],
-"aggressive": ["He is aggressive in games."],
-"disciplined": ["She is disciplined in her study."],
-"curious": ["Children are curious by nature."],
-"hesitant": ["He is hesitant to speak."],
-"motivated": ["She is motivated to improve."],
-"sincere": ["He is sincere in his apology."],
-"tolerant": ["She is tolerant of others."],
-"versatile": ["He is versatile in many fields."],
-"witty": ["She is witty and funny."],
-};
+let mode = 0;
 
-let current;
+/* render */
+function render(){
+    let html = "";
 
-/* Chuẩn hóa input */
+    words.forEach((w,i)=>{
+        let question = mode===0 ? w.zh : w.vi;
+
+        html += `
+        <div class="item">
+            <span>${i+1}. ${question}</span>
+            <input placeholder="Nhập đáp án..." 
+                   onkeydown="handleKey(event, this, ${i})">
+            <div id="result${i}" class="result"></div>
+        </div>`;
+    });
+
+    document.getElementById("list").innerHTML = html;
+}
+
+/* chuẩn hóa */
 function normalize(str){
     return str.toLowerCase().trim().replace(/\s+/g," ");
 }
 
-/* Lấy từ mới */
-function nextWord(){
-    current = words[Math.floor(Math.random()*words.length)];
+/* check */
+function check(input, index){
+    let w = words[index];
+    let correctAnswer = mode===0 ? w.vi : w.zh;
+    let resultBox = document.getElementById("result"+index);
 
-    document.getElementById("word").innerText = current.en;
-    document.getElementById("answer").value="";
-    document.getElementById("result").innerText="";
-    document.getElementById("example").innerText="";
-}
-
-/* Kiểm tra */
-function check(){
-    let ans = normalize(document.getElementById("answer").value);
-
-    let correct = current.vi.some(v => normalize(v) === ans);
-
-    if(correct){
-        document.getElementById("result").innerText="✅ Đúng!";
+    if(normalize(input.value) === normalize(correctAnswer)){
+        resultBox.innerHTML = "✅ Đúng";
+        resultBox.className = "result correct";
     } else {
-        document.getElementById("result").innerText =
-        "❌ Sai! " + current.en + " = " + current.vi.join(", ");
-    }
-
-    generateExample();
-}
-
-/* Ví dụ */
-function generateExample(){
-    let word = current.en;
-
-    if(examples[word]){
-        let ex = examples[word][Math.floor(Math.random()*examples[word].length)];
-        document.getElementById("example").innerText = "📌 Ví dụ: " + ex;
-    } else {
-        document.getElementById("example").innerText =
-        "📌 Ví dụ: This is a sentence with '" + word + "'.";
+        resultBox.innerHTML = "❌ Sai → " + correctAnswer;
+        resultBox.className = "result wrong";
     }
 }
 
-/* Phát âm */
-function speak(){
-    let speech = new SpeechSynthesisUtterance(current.en);
-    speech.lang = "en-US";
-    window.speechSynthesis.speak(speech);
+/* bắt Enter */
+function handleKey(e, input, index){
+    if(e.key === "Enter"){
+        check(input, index);
+    }
 }
 
-/* Enter để check */
-document.getElementById("answer").addEventListener("keypress",function(e){
-    if(e.key==="Enter"){
-        check();
-    }
-});
+/* đảo chiều */
+function toggleMode(){
+    mode = mode===0 ? 1 : 0;
+    render();
+}
 
-nextWord();
+render();
 </script>
 
 </body>
