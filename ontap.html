@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ôn tập từ vựng</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 220px;
+    background: #1e293b;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.sidebar a:hover {
+    background: #334155;
+}
+
+/* Content */
+.content {
+    flex: 1;
+    background: #f1f5f9;
+    padding: 20px;
+    position: relative;
+}
+
+/* Nút đảo */
+.toggle-btn {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #f59e0b;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 10px;
+    cursor: pointer;
+    z-index: 1000;
+}
+
+/* Card */
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    max-width: 800px;
+    margin: auto;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+h2 {
+    text-align: center;
+}
+
+/* Row */
+.row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.word {
+    width: 40%;
+    font-weight: bold;
+}
+
+input {
+    flex: 1;
+    padding: 8px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.result {
+    width: 30%;
+    font-size: 14px;
+}
+
+.correct { color: green; }
+.wrong { color: red; }
+
+/* Mobile */
+@media(max-width:768px){
+    body { flex-direction: column; }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        display: flex;
+        overflow-x: auto;
+    }
+
+    .sidebar a { flex: 1; text-align: center; }
+
+    .row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .word, .result {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- MENU -->
+<div class="sidebar">
+     <a href="index.html">🏠 Trang chính</a>
+    <a href="practice.html">📘 Luyện tập</a>
+    <a href="vocab.html">🧠 Từ vựng Zy cần ôn</a>
+    <a href="hoctuvung.html">🔄 Ôn tập</a>
+        <a href="ontap.html">📋 Ôn tập list</a>
+</div>
+
+<!-- Nút đảo -->
+<button class="toggle-btn" onclick="toggleMode()">🔄 Đổi chiều</button>
+
+<!-- CONTENT -->
+<div class="content">
+<div class="card">
+
+<h2 id="title">Ôn tập (Anh → Việt)</h2>
+
+<div id="list"></div>
+
+</div>
+</div>
+
+<script>
+
+/* DATA */
+const words = [
+    {en:"go canoeing", vi:["chèo thuyền","đi chèo thuyền"]},
+    {en:"equipment", vi:["thiết bị","dụng cụ"]},
+    {en:"explore", vi:["khám phá"]},
+    {en:"spectacular", vi:["ngoạn mục","ấn tượng"]},
+    {en:"exhibition", vi:["triển lãm"]},
+    {en:"countryside", vi:["nông thôn","vùng quê"]},
+    {en:"attraction", vi:["điểm tham quan","điểm thu hút"]},
+    {en:"audio guide", vi:["hướng dẫn bằng âm thanh"]},
+    {en:"wildlife", vi:["động vật hoang dã"]},
+    {en:"peaceful", vi:["yên bình"]},
+    {en:"go on a guided tour", vi:["tham gia tour có hướng dẫn"]},
+    {en:"sun cream", vi:["kem chống nắng"]},
+
+    {en:"go climbing", vi:["leo núi","đi leo núi"]},
+    {en:"seaside resort", vi:["khu nghỉ dưỡng ven biển"]},
+    {en:"national park", vi:["công viên quốc gia"]},
+    {en:"backpacking", vi:["du lịch bụi","đi phượt"]},
+    {en:"excellent", vi:["xuất sắc","rất tốt"]},
+    {en:"wonderful", vi:["tuyệt vời"]},
+    {en:"brilliant", vi:["xuất sắc","rực rỡ"]},
+    {en:"interesting", vi:["thú vị"]},
+    {en:"amazing", vi:["kinh ngạc","tuyệt vời"]},
+    {en:"amusement park", vi:["công viên giải trí"]},
+    {en:"awful", vi:["tồi tệ","kinh khủng"]},
+    {en:"incredible", vi:["không thể tin được","tuyệt vời"]},
+    
+     {en:"security", vi:["an ninh","kiểm tra an ninh"]},
+    {en:"long queues", vi:["hàng dài","xếp hàng dài"]},
+    {en:"departures", vi:["chuyến đi","lịch khởi hành","khu khởi hành"]},
+    {en:"miss a train", vi:["lỡ tàu","trễ tàu"]},
+    {en:"luggage", vi:["hành lý"]},
+    {en:"convenient", vi:["tiện lợi"]},
+    {en:"delayed", vi:["bị hoãn","trễ"]},
+    {en:"catch a train", vi:["bắt tàu","kịp tàu"]},
+    {en:"commute", vi:["đi làm xa","đi lại hàng ngày"]},
+    {en:"a return ticket", vi:["vé khứ hồi"]},
+    {en:"passenger", vi:["hành khách"]},
+    {en:"board the plane", vi:["lên máy bay"]}
+];
+
+let mode = 0; // 0: EN->VI, 1: VI->EN
+
+function normalize(str){
+    return str.toLowerCase().trim().replace(/\s+/g," ").replace(/[.,]/g,"");
+}
+
+function render(){
+    const container = document.getElementById("list");
+    container.innerHTML = "";
+
+    words.forEach((w, index) => {
+        const row = document.createElement("div");
+        row.className = "row";
+
+        let display = mode === 0 ? w.en : w.vi.join(" / ");
+
+        row.innerHTML = `
+            <div class="word">${display}</div>
+            <input placeholder="Nhập..." id="input-${index}">
+            <div class="result" id="result-${index}"></div>
+        `;
+
+        container.appendChild(row);
+
+        const input = document.getElementById(`input-${index}`);
+
+        function check(){
+            let ans = normalize(input.value);
+            let result = document.getElementById(`result-${index}`);
+
+            if(ans === "") {
+                result.innerText = "";
+                return;
+            }
+
+            let correct;
+
+            if(mode === 0){
+                correct = w.vi.some(v => normalize(v) === ans);
+            } else {
+                correct = normalize(w.en) === ans;
+            }
+
+            if(correct){
+                result.innerText = "✅ Đúng";
+                result.className = "result correct";
+            } else {
+                result.innerText = mode === 0
+                    ? "❌ " + w.vi.join(", ")
+                    : "❌ " + w.en;
+
+                result.className = "result wrong";
+            }
+        }
+
+        input.addEventListener("keypress", function(e){
+            if(e.key === "Enter"){
+                check();
+            }
+        });
+
+        input.addEventListener("blur", check);
+    });
+
+    document.getElementById("title").innerText =
+        mode === 0 ? "Ôn tập (Anh → Việt)" : "Ôn tập (Việt → Anh)";
+}
+
+function toggleMode(){
+    mode = 1 - mode;
+    render();
+}
+
+/* INIT */
+render();
+
+</script>
+
+</body>
+</html>
