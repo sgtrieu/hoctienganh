@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PTE WFD Practice</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: "Segoe UI", sans-serif;
+    display: flex;
+}
+
+/* SIDEBAR */
+.sidebar {
+    width: 220px;
+    background: #1e293b;
+    color: white;
+    height: 100vh;
+    padding: 20px;
+}
+
+.sidebar a {
+    display: block;
+    color: white;
+    padding: 12px;
+    text-decoration: none;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.sidebar a:hover {
+    background: #334155;
+}
+
+/* CONTENT */
+.content {
+    flex: 1;
+    background: #f1f5f9;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+.card {
+    background: white;
+    padding: 30px;
+    border-radius: 15px;
+    width: 100%;
+    max-width: 650px;
+    text-align: center;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+textarea {
+    width: 90%;
+    height: 120px;
+    padding: 12px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: none;
+    font-size: 16px;
+}
+
+button {
+    padding: 10px 18px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    margin: 5px;
+}
+
+.start-btn {
+    background: #6366f1;
+    color: white;
+}
+
+.listen-btn {
+    background: #8b5cf6;
+    color: white;
+}
+
+.check-btn {
+    background: #22c55e;
+    color: white;
+}
+
+.next-btn {
+    background: #3b82f6;
+    color: white;
+}
+
+#result {
+    margin-top: 15px;
+    font-weight: bold;
+}
+
+@media(max-width:768px){
+    body {
+        flex-direction: column;
+    }
+
+    .sidebar {
+        width: 100%;
+        height: auto;
+        display: flex;
+    }
+
+    textarea {
+        width: 95%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <a href="index.html">🏠 Trang chính</a>
+    <a href="practice.html">📘 Luyện tập</a>
+    <a href="vocab.html">🧠 Từ vựng</a>
+    <a href="hoctuvung.html">🔄 Ôn tập</a>
+    <a href="ontap.html">📋 Ôn tập list</a>
+    <a href="wfd.html">🎧 WFD</a>
+</div>
+
+<div class="content">
+<div class="card">
+
+<h2>🎧 Write From Dictation</h2>
+
+<div id="sentenceList"></div>
+
+
+
+<button class="start-btn" onclick="startGame()">
+Bắt đầu
+</button>
+
+<div id="game" style="display:none;">
+
+    <button class="listen-btn" onclick="speakSentence()">
+        🔊 Nghe câu
+    </button>
+
+    <button class="next-btn" onclick="nextSentence()">
+        Câu mới
+    </button>
+
+    <br><br>
+
+    <textarea
+        id="answer"
+        placeholder="Nhập câu bạn nghe được..."
+    ></textarea>
+
+    <br>
+
+    <button class="check-btn" onclick="check()">
+        Kiểm tra
+    </button>
+
+    <p id="result"></p>
+
+</div>
+
+</div>
+</div>
+
+<script>
+const sentences = [
+  {
+    en: "For the small businesses, making profit is the main priority.",
+    vi: "Đối với các doanh nghiệp nhỏ, lợi nhuận là ưu tiên hàng đầu."
+  },
+  {
+    en: "The library will be closed for staff training tomorrow morning.",
+    vi: "Thư viện sẽ đóng cửa để đào tạo nhân viên vào sáng mai."
+  },
+  {
+    en: "Assignments must be submitted at the end of the term.",
+    vi: "Các bài tập phải được nộp vào cuối học kỳ."
+  },
+  {
+    en: "City planners recognize the need for accessible public transport options.",
+    vi: "Các nhà quy hoạch đô thị nhận ra nhu cầu về các phương tiện giao thông công cộng dễ tiếp cận."
+  },
+  {
+    en: "The history of economics is a tricky subject to study.",
+    vi: "Lịch sử kinh tế là một môn học khó để nghiên cứu."
+  },
+  {
+    en: "The amount of time spent on configuration varies considerably.",
+    vi: "Lượng thời gian dành cho việc cấu hình thay đổi đáng kể."
+  },
+  {
+    en: "Scientific experiments should be repeated to verify the results.",
+    vi: "Các thí nghiệm khoa học nên được lặp lại để xác minh kết quả."
+  },
+  {
+    en: "Economic problems caused a big rise in unemployment.",
+    vi: "Các vấn đề kinh tế đã gây ra sự gia tăng lớn về tình trạng thất nghiệp."
+  },
+  {
+    en: "Archeologists discovered tools and other artifacts near the ancient tomb.",
+    vi: "Các nhà khảo cổ học đã phát hiện ra các công cụ và hiện vật khác gần ngôi mộ cổ."
+  },
+  {
+    en: "This course considerably emphasizes critical thinking skills.",
+    vi: "Khóa học đặt trọng tâm đáng kể vào kỹ năng tư duy phản biện."
+  },
+  {
+    en: "This project is divided into four main sections.",
+    vi: "Dự án được chia thành bốn phần chính."
+  },
+  {
+    en: "Many food crops require a large amount of water and fertilizer.",
+    vi: "Nhiều loại cây lương thực cần một lượng lớn nước và phân bón."
+  },
+  {
+    en: "Experts are now able to forecast weather over much longer periods.",
+    vi: "Các chuyên gia hiện có thể dự báo thời tiết trong thời gian dài hơn nhiều."
+  },
+  {
+    en: "A typical part of the course involves the study of society.",
+    vi: "Một phần điển hình của khóa học bao gồm việc nghiên cứu về xã hội."
+  },
+  {
+    en: "Philosophy uses logic and reasons to analyze human experience.",
+    vi: "Triết học sử dụng logic và lý lẽ để phân tích trải nghiệm của con người."
+  },
+  {
+    en: "We have a lecture in the morning on Thursday.",
+    vi: "Chúng tôi có một bài giảng vào buổi sáng thứ Năm."
+  },
+  {
+    en: "The local government has adopted a plan for infrastructure development.",
+    vi: "Chính quyền địa phương đã thông qua kế hoạch phát triển cơ sở hạ tầng."
+  },
+  {
+    en: "Information technology has changed the way people study today.",
+    vi: "Công nghệ thông tin đã thay đổi cách mọi người học tập ngày nay."
+  },
+  {
+    en: "Science degrees are now offering different levels of specialization.",
+    vi: "Bằng cấp khoa học hiện đang cung cấp các cấp độ chuyên môn khác nhau."
+  },
+  {
+    en: "Students are required to have an undergraduate degree in biology to be enrolled in this course.",
+    vi: "Sinh viên phải có bằng cử nhân sinh học để được đăng ký vào khóa học này."
+  },
+  {
+    en: "The university has invested in new technologies designed to support learning.",
+    vi: "Trường đại học đã đầu tư vào công nghệ mới được thiết kế cho việc học tập."
+  },
+  {
+    en: "Agenda items should be submitted by the end of the day.",
+    vi: "Các mục trong chương trình nghị sự cần được nộp trước khi hết ngày."
+  },
+  {
+    en: "All dissertations must be accompanied by a submission form.",
+    vi: "Tất cả luận văn phải kèm theo mẫu đơn nộp bài."
+  },
+  {
+    en: "Recession triggers exciting creativity and high rates of public wisdom.",
+    vi: "Suy thoái kinh tế kích thích sự sáng tạo thú vị và tỉ lệ trí tuệ đại chúng cao."
+  },
+  {
+    en: "Tutors should set clear goals at the start of the class.",
+    vi: "Gia sư nên đặt ra mục tiêu rõ ràng vào đầu buổi học."
+  },
+  {
+    en: "Music has the ability to shape our emotions.",
+    vi: "Âm nhạc có khả năng định hình cảm xúc của chúng ta."
+  },
+  {
+    en: "Please confirm that you have received the textbook.",
+    vi: "Vui lòng xác nhận rằng bạn đã nhận được sách giáo khoa."
+  },
+  {
+    en: "There are many different styles of business management.",
+    vi: "Có nhiều phong cách quản lý kinh doanh khác nhau."
+  },
+  {
+    en: "She began by giving an outline of the previous lecture.",
+    vi: "Cô ấy bắt đầu bằng cách đưa ra một phác thảo của bài giảng trước."
+  },
+  {
+    en: "Find out how to get resources before your research.",
+    vi: "Tìm hiểu cách lấy tài liệu/nguồn lực trước khi bạn nghiên cứu."
+  },
+  {
+    en: "The teaching staff are actively engaged in the original research.",
+    vi: "Đội ngũ giảng viên đang tích cực tham gia vào nghiên cứu gốc."
+  },
+  {
+    en: "Psychologists say that what we have experienced influences our behaviors.",
+    vi: "Các nhà tâm lý học nói rằng những gì chúng ta đã trải qua ảnh hưởng đến hành vi của chúng ta."
+  },
+  {
+    en: "Field trips are an essential part of geography courses.",
+    vi: "Các chuyến đi thực tế là một phần thiết yếu của các khóa học địa lý."
+  },
+  {
+    en: "Banks charge interest on the money they lend to customers.",
+    vi: "Các ngân hàng tính lãi suất trên số tiền họ cho khách hàng vay."
+  },
+  {
+    en: "This book can be borrowed for a maximum of one week.",
+    vi: "Cuốn sách này có thể được mượn tối đa một tuần."
+  },
+  {
+    en: "You need to hand in an essay next semester.",
+    vi: "Bạn cần nộp bài luận vào học kỳ tới."
+  },
+  {
+    en: "The digital camera has some advantages over traditional film.",
+    vi: "Máy ảnh kỹ thuật số có một số ưu điểm so với phim truyền thống."
+  },
+  {
+    en: "Academic libraries across the world are steadily incorporating social media.",
+    vi: "Các thư viện học thuật trên khắp thế giới đang dần kết hợp các phương tiện truyền thông xã hội."
+  },
+  {
+    en: "Having a strong motivation is important to achieve your goals.",
+    vi: "Có động lực mạnh mẽ là điều quan trọng để đạt được mục tiêu của bạn."
+  },
+  {
+    en: "Career opportunities in this field are quite limited.",
+    vi: "Cơ hội nghề nghiệp trong lĩnh vực này khá hạn chế."
+  },
+  {
+    en: "Convincing evidence to support this theory is hard to obtain.",
+    vi: "Bằng chứng thuyết phục để ủng hộ lý thuyết này rất khó có được."
+  },
+  {
+    en: "Food containing ample calories provides little or no nutritional value.",
+    vi: "Thực phẩm chứa nhiều calo cung cấp rất ít hoặc không có giá trị dinh dưỡng."
+  },
+  {
+    en: "This course places considerable emphasis on critical thinking skills.",
+    vi: "Khóa học này đặt trọng tâm đáng kể vào kỹ năng tư duy phản biện."
+  },
+  {
+    en: "Technology is no longer a simple tool that we can control.",
+    vi: "Công nghệ không còn là công cụ đơn giản mà chúng ta có thể kiểm soát."
+  },
+  {
+    en: "Physics is the key subject to understanding the world and the universe.",
+    vi: "Vật lý là môn học quan trọng để hiểu thế giới và vũ trụ."
+  },
+  {
+    en: "These words recognized the excellence of the undergraduates research projects.",
+    vi: "Những lời này công nhận sự xuất sắc của các dự án nghiên cứu của sinh viên đại học."
+  },
+  {
+    en: "The ways in which people communicate are constantly changing.",
+    vi: "Cách thức giao tiếp của con người đang thay đổi không ngừng."
+  },
+  {
+    en: "It is clear that the human population has an impact on the environment.",
+    vi: "Rõ ràng là dân số loài người có tác động đến môi trường."
+  },
+  {
+    en: "We are phasing out disposable cups on campus.",
+    vi: "Chúng tôi đang loại bỏ dần các cốc dùng một lần trong khuôn viên trường."
+  }
+];
+
+function normalize(text){
+
+    return text
+        .toLowerCase()
+        .trim()
+        .replace(/[.,!?']/g,"")
+        .replace(/\s+/g," ");
+}
+
+function speakSentence(index){
+
+    speechSynthesis.cancel();
+
+    let speech =
+    new SpeechSynthesisUtterance(
+        sentences[index].en
+    );
+
+    speech.lang = "en-US";
+    speech.rate = 0.8;
+
+    speechSynthesis.speak(speech);
+}
+
+function check(index){
+
+    let user =
+    normalize(
+        document.getElementById(
+            "answer" + index
+        ).value
+    );
+
+    let correct =
+    normalize(
+        sentences[index].en
+    );
+
+    let result =
+    document.getElementById(
+        "result" + index
+    );
+
+    if(user === correct){
+
+        result.innerHTML =
+        "✅ Đúng";
+
+    }else{
+
+        result.innerHTML =
+        "❌ Sai<br><br>" +
+        "<b>Đáp án:</b> " +
+        sentences[index].en +
+        "<br><b>Nghĩa:</b> " +
+        sentences[index].vi;
+    }
+}
+
+function loadList(){
+
+    let html = "";
+
+    sentences.forEach((item,index)=>{
+
+        html += `
+
+        <div style="
+            margin-bottom:25px;
+            padding:15px;
+            border:1px solid #ddd;
+            border-radius:10px;
+        ">
+
+            <h3>Câu ${index+1}</h3>
+
+            <button class="listen-btn"
+            onclick="speakSentence(${index})">
+            🔊 Nghe câu
+            </button>
+
+            <br><br>
+
+            <textarea
+                id="answer${index}"
+                placeholder="Nhập câu bạn nghe được..."
+                style="
+                    width:95%;
+                    height:90px;
+                    padding:10px;
+                "
+            ></textarea>
+
+            <br><br>
+
+            <button class="check-btn"
+            onclick="check(${index})">
+            Kiểm tra
+            </button>
+
+            <p id="result${index}"></p>
+
+        </div>
+
+        `;
+    });
+
+    document.getElementById(
+        "sentenceList"
+    ).innerHTML = html;
+}
+
+loadList();
+
+</script>
+
+</body>
+</html>
